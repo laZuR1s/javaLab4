@@ -1,4 +1,6 @@
 package entity;
 
-public record Profile(String name, Sex sex) {
+public record Profile(String name, int age, String phone, Sex sex, String address) {
+
 }
+

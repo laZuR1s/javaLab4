@@ -24,13 +24,13 @@ public class ConsoleInterface {
 
     private void processCommands() {
         int errorCount = 0;
-        try(Scanner scanner=new Scanner(System.in)) {
+        try (Scanner scanner = new Scanner(System.in)) {
 
-            while(errorCount<MAX_ERROR_COUNT) {
+            while (errorCount < MAX_ERROR_COUNT) {
                 System.out.println("Enter command:");
                 try {
                     handleCommand(scanner);
-                } catch (Exception exception){
+                } catch (IllegalArgumentException exception) {
                     LOGGER.log(Level.WARNING, "Invalid command", exception);
                     errorCount++;
                 }
@@ -39,9 +39,19 @@ public class ConsoleInterface {
     }
 
     private void handleCommand(Scanner scanner) {
-        Command nextCommand=Command.valueOf(scanner.nextLine());
-        if(nextCommand==Command.LOADFILE){
-            profileService.loadFile("test.dat");
+        Command nextCommand = Command.valueOf(scanner.nextLine().toUpperCase());
+
+        switch (nextCommand) {
+            case LOADFILE -> {
+                System.out.println("Enter file name:");
+                String fileName = scanner.nextLine();
+                profileService.loadFile("src/Data/" + fileName);
+            }
+            case SEARCH -> {
+                System.out.println("Enter full name:");
+                String fio = scanner.nextLine();
+                profileService.searchProfileByFio(fio);
+            }
         }
     }
 

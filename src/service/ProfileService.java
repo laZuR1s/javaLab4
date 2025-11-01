@@ -4,24 +4,41 @@ import entity.Profile;
 import entity.ProfileFileData;
 import repository.ProfileFileRepository;
 
-import java.util.Collections;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class ProfileService {
     private final CheckSumService checkSumService;
     private final ProfileFileRepository profileFileRepository;
     private Map<String, Profile> fioToProfile;
 
+    private static final Logger LOGGER = Logger.getLogger(ProfileService.class.getName());
 
     public ProfileService(CheckSumService checkSumService, ProfileFileRepository profileFileRepository) {
         this.checkSumService = checkSumService;
         this.profileFileRepository = profileFileRepository;
     }
+
     public void loadFile(String fileName) {
-        {
-            ProfileFileData profileFileData = profileFileRepository.loadFile(fileName);
-            checkSumService.validateFileCheckSum(profileFileData);
-            fioToProfile = profileFileData.fioToProfile();
+
+        ProfileFileData profileFileData = profileFileRepository.loadFile(fileName);
+        checkSumService.validateFileCheckSum(profileFileData);
+        fioToProfile = profileFileData.fioToProfile();
+
+
+    }
+
+    public void searchProfileByFio(String fio) {
+        Profile profile = fioToProfile.entrySet().
+                stream().
+                filter(entry -> entry.getKey().equalsIgnoreCase(fio))
+                .map(Map.Entry::getValue)
+                .findFirst().
+                orElse(null);
+        if (profile != null) {
+            System.out.println("Profile found: " + profile);
+        } else {
+            LOGGER.warning("Profile not found for : " + fio);
         }
     }
 }
