@@ -52,6 +52,20 @@ public class ConsoleInterface {
                 String fio = scanner.nextLine();
                 profileService.searchProfileByFio(fio);
             }
+            case ADDUSER ->{
+                System.out.println("Enter name");
+                String name = scanner.nextLine();
+                System.out.println("Enter age");
+                int age = Integer.parseInt(scanner.nextLine());
+                System.out.println("Enter phone number");
+                String phoneNumber = scanner.nextLine();
+                System.out.println("Enter sex");
+                String sex= scanner.nextLine();
+                System.out.println("Enter address");
+                String address = scanner.nextLine();
+                profileService.addUser(name, age, phoneNumber, sex, address);
+
+            }
         }
     }
 

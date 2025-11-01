@@ -37,6 +37,22 @@ public class ProfileFileRepository {
         }
     }
 
+    public Profile addProfile(String fullName, int age, String phoneNumber, String sexStr, String address) {
+
+        if (fullName == null || fullName.isBlank() || fullName.contains(";") ||
+                age < 0 ||
+                phoneNumber == null || phoneNumber.isBlank() || phoneNumber.contains(";") ||
+                !isValidSex(sexStr) ||
+                address == null || address.isBlank() || address.contains(";")) {
+            throw new ValidationException("Incorrect profile data format");
+        }
+
+        Sex sex = Sex.valueOf(sexStr.toUpperCase());
+
+        return new Profile(fullName, age, phoneNumber, sex, address);
+    }
+
+
     private static void constructNewProfile(String line, Map<String, Profile> map) {
         String[] parts = line.split(";");
 
@@ -71,6 +87,19 @@ public class ProfileFileRepository {
         }
         map.put(name, new Profile(name, age, phone, sex, address));
     }
+
+    private boolean isValidSex(String sexStr) {
+        if (sexStr == null || sexStr.isBlank()) {
+            return false;
+        }
+        try {
+            Sex.valueOf(sexStr.toUpperCase());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
 
     public void saveFile(String fileName, Map<String, Profile> fioToProfile) {
 

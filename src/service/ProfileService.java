@@ -41,4 +41,18 @@ public class ProfileService {
             LOGGER.warning("Profile not found for : " + fio);
         }
     }
+
+
+
+    public void addUser(String fullName, int age, String phone, String sexStr, String address) {
+        if(fioToProfile.containsKey(fullName)) {
+            LOGGER.warning("Profile already exists for : " + fullName);
+            return;
+        }
+
+        fioToProfile.put(fullName,profileFileRepository.addProfile(fullName, age, phone, sexStr, address));
+        System.out.println("Profile added for : " + fullName);
+    }
+
+
 }
