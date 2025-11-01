@@ -52,7 +52,7 @@ public class ConsoleInterface {
                 String fio = scanner.nextLine();
                 profileService.searchProfileByFio(fio);
             }
-            case ADDUSER ->{
+            case ADDUSER -> {
                 System.out.println("Enter name");
                 String name = scanner.nextLine();
                 System.out.println("Enter age");
@@ -60,12 +60,23 @@ public class ConsoleInterface {
                 System.out.println("Enter phone number");
                 String phoneNumber = scanner.nextLine();
                 System.out.println("Enter sex");
-                String sex= scanner.nextLine();
+                String sex = scanner.nextLine();
                 System.out.println("Enter address");
                 String address = scanner.nextLine();
                 profileService.addUser(name, age, phoneNumber, sex, address);
-
             }
+            case REMOVEUSER -> {
+                System.out.println("Enter name of user to remove:");
+                String nameToRemove = scanner.nextLine();
+                profileService.removeUser(nameToRemove);
+            }
+            case SAVEFILE -> profileService.saveFile();
+            case SAVEFILEAS -> {
+                System.out.println("Enter new file name:");
+                String newFileName = scanner.nextLine();
+                profileService.saveFile("src/Data/" + newFileName);
+            }
+            case EXIT -> System.exit(0);
         }
     }
 

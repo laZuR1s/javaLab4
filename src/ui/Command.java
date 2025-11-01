@@ -4,5 +4,10 @@ public enum Command {
 
     LOADFILE,
     SEARCH,
-    ADDUSER
+    ADDUSER,
+    REMOVEUSER,
+    SAVEFILE,
+    SAVEFILEAS,
+    EXIT
+
 }

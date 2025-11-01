@@ -5,17 +5,16 @@ import entity.ProfileFileData;
 import entity.Sex;
 import exception.ValidationException;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class ProfileFileRepository {
 
     private static final Logger LOGGER = Logger.getLogger(ProfileFileRepository.class.getName());
+
 
     public ProfileFileData loadFile(String fileName) {
 
@@ -55,7 +54,6 @@ public class ProfileFileRepository {
 
     private static void constructNewProfile(String line, Map<String, Profile> map) {
         String[] parts = line.split(";");
-
         if (parts.length != 5)
             throw new ValidationException("Invalid file format: " + line);
 
@@ -100,9 +98,23 @@ public class ProfileFileRepository {
         }
     }
 
+    public void saveToFile(String fileNameToSave, Map<String, Profile> fioToProfile, int fileHash) {
 
-    public void saveFile(String fileName, Map<String, Profile> fioToProfile) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileNameToSave))) {
 
+            String profilesData = fioToProfile
+                    .entrySet()
+                    .stream()
+                    .map(entry -> entry.getKey() + ";" + entry.getValue().age() + ";" +
+                            entry.getValue().phone() + ";" + entry.getValue().sex() + ";" + entry.getValue().address())
+                    .collect(Collectors.joining("\n"));
+
+            writer.write(Integer.toString(fileHash));
+            writer.newLine();
+            writer.write(profilesData);
+
+        } catch (IOException e) {
+            throw new ValidationException("IO error when writing to file: " + fileNameToSave);
+        }
     }
-
 }

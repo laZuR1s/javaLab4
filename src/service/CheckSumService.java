@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class CheckSumService {
 
-private static final Integer HASH_LIMIT=10000000;
+    private static final Integer HASH_LIMIT = 10000000;
 
     public void validateFileCheckSum(ProfileFileData profileFileData) {
         if (profileFileData.fileHash() != calculateChecksum(profileFileData)) {
@@ -15,22 +15,18 @@ private static final Integer HASH_LIMIT=10000000;
         }
     }
 
-    private int calculateChecksum(ProfileFileData profileFileData) {
-
-
-        // Сортировка по ФИО для стабильного порядка
+    public int calculateChecksum(ProfileFileData profileFileData) {
         return profileFileData.fioToProfile().entrySet().stream()
                 .sorted(Map.Entry.comparingByKey(String::compareToIgnoreCase))
-                .map(entry -> entry.getKey() + ";" + entry.getValue()) // "ФИО;Возраст;Телефон;Пол;Адрес"
-                .mapToInt(CheckSumService::stringHash) // считаем суммарный хэш каждой строки
-                .sum(); // объединяем в один int
+                .map(entry -> entry.getKey() + ";" + entry.getValue())
+                .mapToInt(CheckSumService::stringHash)
+                .sum();
     }
-
 
     private static int stringHash(String s) {
         int hash = 0;
         for (char c : s.toCharArray()) {
-            hash = (hash * 31 + c)%HASH_LIMIT;
+            hash = (hash * 31 + c) % HASH_LIMIT;
         }
         return hash;
     }
